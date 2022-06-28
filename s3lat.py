@@ -24,6 +24,8 @@ s3 = boto3.client('s3')
 
 hist = hdrh.histogram.HdrHistogram(1, 10000, 2)
 
+rand_seeded = False
+
 size = s3.get_object_attributes(Bucket=bucket, Key=object,
                                 ObjectAttributes=['ObjectSize'])['ObjectSize']
 if size < fetch_size:
@@ -31,6 +33,10 @@ if size < fetch_size:
     sys.exit(1)
 
 def request_latency(id):
+    global rand_seeded
+    if not rand_seeded:
+        random.seed()
+        rand_seeded = True
     offset = random.randrange(size - fetch_size)
     t1 = time.monotonic()
     fetch = s3.get_object(Bucket=bucket, Key=object,
