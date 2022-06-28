@@ -5,10 +5,17 @@ import sys
 import random
 import hdrh.histogram
 import time
+import argparse
 
-bucket = sys.argv[1]
-object = sys.argv[2]
-iterations = 100
+parser = argparse.ArgumentParser('s3 latency tester')
+parser.add_argument('bucket')
+parser.add_argument('object')
+parser.add_argument('--iterations', type=int, default=100)
+args = parser.parse_args()
+
+bucket = args.bucket
+object = args.object
+iterations = args.iterations
 fetch_size = 512
 
 s3 = boto3.client('s3')
